@@ -1,5 +1,5 @@
 const express = require('express')
-const { getAllCars, Search, myCars, deleteCars, carDetail, Order, allOrders, myBooking, carOrder, Success, upload } = require('../controller/routes')
+const { getAllCars, Search, myCars, deleteCars, carDetail, Order, allOrders, myBooking, carOrder, Success, upload } = require('../controller/car')
 const route = express.Router()
 const auth = require('../middleware/auth')
 const uploads = require('../multer')

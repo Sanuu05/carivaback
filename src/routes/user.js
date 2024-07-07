@@ -1,11 +1,15 @@
-const express = require('express')
-const { signUp, Login, myData } = require('../controller/user')
-const route = express.Router()
-const auth = require('../middleware/auth')
+const express = require("express");
+const router = express.Router();
+const { signUp, login, getCurrentUser } = require("../controller/user");
+const authMiddleware = require("../middleware/auth");
 
-route.post('/signup',signUp)
-route.post('/login',Login)
-route.get('/getuser',auth,myData)
+// Route for user sign up
+router.post("/signup", signUp);
 
+// Route for user login
+router.post("/login", login);
 
-module.exports = route
+// Route to get authenticated user data
+router.get("/user", authMiddleware, getCurrentUser);
+
+module.exports = router;
