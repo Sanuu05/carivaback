@@ -97,8 +97,8 @@ exports.getAllCars = async (req, res) => {
 // TODO : SEARCH
 exports.Search = async (req, res) => {
   try {
-    const client_id = process.env.YOUR_CLIENT_ID;
-    const client_secret = process.env.YOUR_CLIENT_SECRET;
+    // const client_id = process.env.YOUR_CLIENT_ID;
+    // const client_secret = process.env.YOUR_CLIENT_SECRET;
 
     // Get OAuth token
    
