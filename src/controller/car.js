@@ -19,35 +19,36 @@ exports.upload = async (req, res) => {
     const uploader = async (path) => await cloudinary.uploads(path, "Images");
 
     const {
-      name,
+      modeName,
       brand,
-      price,
-      fueltype,
+      pricePerHour,
+      fuelType,
       transmission,
       seats,
       doors,
       bags,
       address,
-      city,
+      lat,
+      lng,
     } = req.body;
-    const user = await User.findById(req.user);
 
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Method not supported" });
     }
 
     if (
-      !name ||
+      !modeName ||
       !brand ||
-      !price ||
-      !fueltype ||
+      !pricePerHour ||
+      !fuelType ||
       !transmission ||
       !seats ||
       !doors ||
       !user ||
       !bags ||
-      !address ||
-      !city
+      !address || 
+      !lat ||
+      !lng
     ) {
       return res.status(400).json({ error: "Please fill all fields" });
     }
@@ -61,8 +62,8 @@ exports.upload = async (req, res) => {
       urls.push(newPath);
       fs.unlinkSync(path);
     }
-
-    const newCar = new Cars({ ...req.body, img: urls, by: user });
+    const user = await User.findOne({ uid: req.uid });
+    const newCar = new Cars({ ...req.body, images: urls, createdBy: user });
     const savedCar = await newCar.save();
 
     return res.json(savedCar);
@@ -101,7 +102,7 @@ exports.Search = async (req, res) => {
     // const client_secret = process.env.YOUR_CLIENT_SECRET;
 
     // Get OAuth token
-   
+
     // const tokenResponse = await axios.post(
     // `https://outpost.mapmyindia.com/api/security/oauth/token?client_id=${client_secret}==&client_secret=${client_id}&grant_type=client_credentials`
     // );
@@ -119,7 +120,7 @@ exports.Search = async (req, res) => {
     // };
 
     // Perform geocode search
-    const {data} = await axios.get(
+    const { data } = await axios.get(
       `https://nominatim.openstreetmap.org/search?format=json&q=${req.params.id}`
     );
 

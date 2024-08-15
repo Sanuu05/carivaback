@@ -1,13 +1,17 @@
-const express = require("express");
-const router = express.Router();
+// src/controllers/userController.js
 const User = require("../models/user");
-const bcrypt = require("bcryptjs");
 const admin = require("../../firebase");
 
 // SIGN UP
 exports.signUp = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password,confirmPassword } = req.body;
+    if(!email || !password|| !confirmPassword || !password){
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    if(password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
 
     // Create user in Firebase Authentication
     const userRecord = await admin.auth().createUser({
@@ -35,11 +39,12 @@ exports.login = async (req, res) => {
 
   try {
     // Verify the ID token with Firebase Admin
+    console.log({idToken})
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const uid = decodedToken.uid;
-
     // Fetch the user from MongoDB using the Firebase UID
     const user = await User.findOne({ uid });
+    console.log({decodedToken,user})
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }
@@ -69,5 +74,3 @@ exports.getCurrentUser = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-module.exports = router;

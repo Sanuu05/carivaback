@@ -2,7 +2,8 @@ const admin = require("../../firebase");
 const User = require("../models/user");
 
 const authenticate = async (req, res, next) => {
-  const idToken = req.header("Authorization").replace("Bearer ", "");
+  const idToken = req.header("Authorization");
+  console.log(">>>>>>>>>>>>>>>>>>>>",idToken);
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
